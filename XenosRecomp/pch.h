@@ -4,7 +4,7 @@
 #include <Windows.h>
 #endif
 
-#include <dxcapi.h>
+#include <d3dcompiler.h>
 
 #include <bit>
 #include <cassert>
@@ -12,12 +12,9 @@
 #include <execution>
 #include <filesystem>
 #include <map>
-#include <smolv.h>
 #include <fmt/core.h>
 #include <string>
 #include <unordered_map>
-#include <xxhash.h>
-#include <zstd.h>
 
 template<typename T>
 static T byteSwap(T value)
