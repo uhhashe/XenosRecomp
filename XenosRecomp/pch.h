@@ -19,17 +19,44 @@
 #include <xxhash.h>
 #include <zstd.h>
 
+static uint16_t byteSwap16(uint16_t value)
+{
+#if defined(_MSC_VER)
+    return _byteswap_ushort(value);
+#else
+    return __builtin_bswap16(value);
+#endif
+}
+
+static uint32_t byteSwap32(uint32_t value)
+{
+#if defined(_MSC_VER)
+    return _byteswap_ulong(value);
+#else
+    return __builtin_bswap32(value);
+#endif
+}
+
+static uint64_t byteSwap64(uint64_t value)
+{
+#if defined(_MSC_VER)
+    return _byteswap_uint64(value);
+#else
+    return __builtin_bswap64(value);
+#endif
+}
+
 template<typename T>
 static T byteSwap(T value)
 {
     if constexpr (sizeof(T) == 1)
         return value;
     else if constexpr (sizeof(T) == 2)
-        return static_cast<T>(__builtin_bswap16(static_cast<uint16_t>(value)));
+        return static_cast<T>(byteSwap16(static_cast<uint16_t>(value)));
     else if constexpr (sizeof(T) == 4)
-        return static_cast<T>(__builtin_bswap32(static_cast<uint32_t>(value)));
-    else if constexpr (sizeof(T) == 8) 
-        return static_cast<T>(__builtin_bswap64(static_cast<uint64_t>(value)));
+        return static_cast<T>(byteSwap32(static_cast<uint32_t>(value)));
+    else if constexpr (sizeof(T) == 8)
+        return static_cast<T>(byteSwap64(static_cast<uint64_t>(value)));
 
     assert(false && "Unexpected byte size.");
     return value;
